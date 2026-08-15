@@ -26,7 +26,7 @@ const ADMINS = {
 };
 
 function App() {
-  const [view, setView] = useState<'login' | 'dashboard' | 'add_employee'>('login');
+  const [view, setView] = useState<'login' | 'dashboard' | 'add_employee' | 'attendance'>('login');
   const [currentUser, setCurrentUser] = useState('');
 
   // Login State
@@ -80,6 +80,9 @@ function App() {
   const renderDashboardContent = () => {
     if (view === 'add_employee') {
       return <AddEmployeeView />;
+    }
+    if (view === 'attendance') {
+      return <AttendanceView />;
     }
     
     // Default Dashboard view
@@ -217,7 +220,9 @@ function App() {
           <a href="#" className={`nav-item ${view === 'dashboard' ? 'active' : ''}`} onClick={() => setView('dashboard')}>
             <LayoutDashboard size={20} /> Dashboard
           </a>
-          <a href="#" className="nav-item"><Users size={20} /> Attendance</a>
+          <a href="#" className={`nav-item ${view === 'attendance' ? 'active' : ''}`} onClick={() => setView('attendance')}>
+            <Users size={20} /> Attendance
+          </a>
           <a href="#" className="nav-item"><Factory size={20} /> Machines</a>
           <a href="#" className={`nav-item ${view === 'add_employee' ? 'active' : ''}`} onClick={() => setView('add_employee')}>
             <UserPlus size={20} /> Add Employee
@@ -415,6 +420,77 @@ const AddEmployeeView = () => {
             )}
           </button>
         </form>
+      </div>
+    </div>
+  );
+};
+
+const AttendanceView = () => {
+  const [records, setRecords] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    fetch('http://localhost:8000/attendance/today')
+      .then(res => res.json())
+      .then(data => {
+        setRecords(data.records || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <div className="dashboard-container">
+      <div className="card-base" style={{ minHeight: '600px' }}>
+        <div className="card-header" style={{ borderBottom: '1px solid #eee', paddingBottom: '20px', marginBottom: '24px' }}>
+          <div className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ backgroundColor: 'rgba(255, 143, 0, 0.1)', padding: '10px', borderRadius: '12px', color: '#FF8F00' }}>
+              <Users size={24} />
+            </div>
+            Today's Attendance
+          </div>
+        </div>
+        
+        {loading ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: '#666' }}>Loading records...</div>
+        ) : records.length === 0 ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: '#666' }}>No attendance records found for today.</div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #eee', color: '#9094A6', textAlign: 'left' }}>
+                <th style={{ padding: '16px 8px' }}>Employee</th>
+                <th style={{ padding: '16px 8px' }}>ID</th>
+                <th style={{ padding: '16px 8px' }}>Time</th>
+                <th style={{ padding: '16px 8px' }}>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {records.map((r, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid #eee' }}>
+                  <td style={{ padding: '16px 8px', fontWeight: 600, color: '#2D3142' }}>{r.employee_name}</td>
+                  <td style={{ padding: '16px 8px', color: '#666' }}>{r.employee_id}</td>
+                  <td style={{ padding: '16px 8px', color: '#666' }}>{new Date(r.timestamp).toLocaleTimeString()}</td>
+                  <td style={{ padding: '16px 8px' }}>
+                    <span style={{ 
+                      padding: '4px 12px', 
+                      borderRadius: '12px', 
+                      fontSize: '12px', 
+                      fontWeight: 600,
+                      backgroundColor: r.action === 'check-in' ? '#E8F5E9' : '#FFEBEE',
+                      color: r.action === 'check-in' ? '#2E7D32' : '#C62828'
+                    }}>
+                      {r.action === 'check-in' ? 'Check In' : 'Check Out'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
