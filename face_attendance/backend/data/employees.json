@@ -233,5 +233,10 @@
     "name": "Aditya Pathak",
     "designation": "Intern",
     "contact_number": "8668429664"
+  },
+  {
+    "name": "Aditya test2",
+    "designation": "Intern2",
+    "contact_number": "1234567890"
   }
 ]

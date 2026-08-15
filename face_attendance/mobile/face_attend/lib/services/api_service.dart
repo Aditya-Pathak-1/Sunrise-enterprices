@@ -150,8 +150,8 @@ class ApiService {
       final res = await http.get(Uri.parse(AppConfig.peopleUrl)).timeout(_timeout);
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body) as Map<String, dynamic>;
-        final registeredPeople = List<String>.from(data['registered_people'] ?? []);
-        return registeredPeople.contains(employeeId);
+        final peopleList = data['people'] as List<dynamic>? ?? [];
+        return peopleList.any((p) => p['employee_id'] == employeeId);
       }
       return false;
     } catch (_) {
