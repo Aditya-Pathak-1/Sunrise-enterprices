@@ -1,0 +1,11 @@
+# FaceAttend — Employee Name Mapping
+# Format: EMPLOYEE_ID,Full Name
+# One line per person. Lines starting with # are ignored.
+#
+# Example:
+# EMP001,Arjun Sharma
+# EMP002,Priya Patel
+# EMP003,Rahul Verma
+
+EMP001,Arjun Sharma
+EMP002,Priya Patel

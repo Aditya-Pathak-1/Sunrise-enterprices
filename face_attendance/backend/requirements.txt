@@ -1,0 +1,14 @@
+fastapi==0.111.0
+uvicorn[standard]==0.30.0
+python-multipart==0.0.9
+numpy>=2.0.0
+Pillow>=10.3.0
+python-dotenv==1.0.1
+requests>=2.31.0
+
+# Face Recognition — InsightFace buffalo_l (ArcFace R100 + RetinaFace)
+# ONNX Runtime for inference (no TensorFlow / PyTorch required)
+insightface>=1.0.1
+onnxruntime>=1.18.0
+opencv-python-headless>=4.9.0
+scipy>=1.13.0
