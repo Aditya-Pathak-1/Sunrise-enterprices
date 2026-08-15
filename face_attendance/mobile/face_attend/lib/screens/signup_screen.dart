@@ -141,6 +141,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           labelText: 'Full Name',
                           labelStyle: TextStyle(color: Colors.grey[500]),
                           prefixIcon: const Icon(Icons.person_outline, color: Color(0xFFFF9800)),
+                          filled: true,
+                          fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),
@@ -164,6 +166,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           labelText: 'Designation',
                           labelStyle: TextStyle(color: Colors.grey[500]),
                           prefixIcon: const Icon(Icons.work_outline, color: Color(0xFFFF9800)),
+                          filled: true,
+                          fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),
@@ -187,6 +191,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           labelText: 'Contact Number',
                           labelStyle: TextStyle(color: Colors.grey[500]),
                           prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFFFF9800)),
+                          filled: true,
+                          fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),

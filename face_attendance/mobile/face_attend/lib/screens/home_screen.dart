@@ -8,6 +8,7 @@ import '../widgets/sunrise_design.dart';
 import 'face_scan_screen.dart';
 import 'history_screen.dart';
 import 'login_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String name;
@@ -119,10 +120,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.grey[200],
-              child: const Icon(Icons.person, color: Colors.grey),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ProfileScreen(
+                      employeeId: widget.employeeId,
+                      name: widget.name,
+                    ),
+                  ),
+                );
+              },
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.grey[200],
+                child: const Icon(Icons.person, color: Colors.grey),
+              ),
             ),
           )
         ],
@@ -235,6 +249,11 @@ class _HomeScreenState extends State<HomeScreen> {
               if (index == 2) {
                 Navigator.push(context, MaterialPageRoute(
                   builder: (_) => HistoryScreen(employeeId: widget.employeeId, name: widget.name),
+                ));
+              }
+              if (index == 3) {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => ProfileScreen(employeeId: widget.employeeId, name: widget.name),
                 ));
               }
             },

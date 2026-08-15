@@ -169,6 +169,8 @@ class _AdminAddEmployeeScreenState extends State<AdminAddEmployeeScreen> {
                   decoration: InputDecoration(
                     labelText: 'Employee Name',
                     prefixIcon: const Icon(Icons.person_outline, color: Color(0xFFFF9800)),
+                    filled: true,
+                    fillColor: Colors.white,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
@@ -184,6 +186,8 @@ class _AdminAddEmployeeScreenState extends State<AdminAddEmployeeScreen> {
                   decoration: InputDecoration(
                     labelText: 'Contact Number (ID)',
                     prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFFFF9800)),
+                    filled: true,
+                    fillColor: Colors.white,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,

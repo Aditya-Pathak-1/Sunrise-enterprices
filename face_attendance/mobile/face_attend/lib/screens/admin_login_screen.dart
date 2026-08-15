@@ -131,6 +131,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           labelText: 'Admin Username',
                           labelStyle: TextStyle(color: Colors.grey[500]),
                           prefixIcon: const Icon(Icons.admin_panel_settings_outlined, color: Color(0xFFFF9800)),
+                          filled: true,
+                          fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),
@@ -154,6 +156,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           labelText: 'Password',
                           labelStyle: TextStyle(color: Colors.grey[500]),
                           prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFFFF9800)),
+                          filled: true,
+                          fillColor: Colors.white,
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword ? Icons.visibility_off : Icons.visibility,

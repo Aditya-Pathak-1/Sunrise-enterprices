@@ -172,6 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Employee Name',
                           labelStyle: TextStyle(color: Colors.grey[500]),
                           prefixIcon: const Icon(Icons.person_outline, color: Color(0xFFFF9800)),
+                          filled: true,
+                          fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),
@@ -195,6 +197,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Contact Number',
                           labelStyle: TextStyle(color: Colors.grey[500]),
                           prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFFFF9800)),
+                          filled: true,
+                          fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),
