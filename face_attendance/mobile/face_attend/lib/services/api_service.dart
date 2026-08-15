@@ -107,6 +107,41 @@ class ApiService {
   }
 
   // ─────────────────────────────────────────────────────────────────
+  // Register Employee Face
+  // ─────────────────────────────────────────────────────────────────
+
+  static Future<Map<String, dynamic>> registerEmployeeFace(
+      String name, String employeeId, File imageFile) async {
+    try {
+      final request = http.MultipartRequest('POST', Uri.parse(AppConfig.registerUrl));
+      request.fields['name'] = name;
+      request.fields['employee_id'] = employeeId;
+      request.files.add(await http.MultipartFile.fromPath(
+        'images',
+        imageFile.path,
+        filename: 'face.jpg',
+      ));
+
+      final streamed = await request.send().timeout(_timeout);
+      final res = await http.Response.fromStream(streamed);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        return jsonDecode(res.body) as Map<String, dynamic>;
+      } else {
+        final body = jsonDecode(res.body) as Map<String, dynamic>;
+        final detail = body['detail']?.toString() ?? 'Error ${res.statusCode}';
+        throw ApiException(detail, statusCode: res.statusCode);
+      }
+    } on ApiException {
+      rethrow;
+    } on SocketException {
+      throw const ApiException('Cannot connect to server. Check your Wi-Fi and API URL.');
+    } catch (e) {
+      throw ApiException('Failed to register face: $e');
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
   // Attendance: Today
   // ─────────────────────────────────────────────────────────────────
 

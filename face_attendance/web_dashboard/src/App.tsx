@@ -18,11 +18,11 @@ const productionData = [
 ];
 
 const ADMINS = {
-  'rashmi naik': 'sunrise@123',
-  'shilpa Bhoir': 'sunrise@123',
-  'ayush': 'sunrise@123',
-  'Ahana': 'sunrise@123',
-  'aditya': 'sunrise@123',
+  'RASHMI NAIK': 'sunrise@123',
+  'SHILPA BHOIR': 'sunrise@123',
+  'AYUSH': 'sunrise@123',
+  'AHANA': 'sunrise@123',
+  'ADITYA': 'sunrise@123',
 };
 
 function App() {
@@ -57,7 +57,7 @@ function App() {
           {loginError && <div style={{ color: '#F44336', fontSize: '14px', textAlign: 'center' }}>{loginError}</div>}
           <input
             type="text"
-            placeholder="Admin Username (e.g., ayush)"
+            placeholder="Admin Username (e.g., AYUSH)"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             style={{ padding: '16px', borderRadius: '12px', border: '1px solid #E0E0E0', fontSize: '16px', outline: 'none' }}

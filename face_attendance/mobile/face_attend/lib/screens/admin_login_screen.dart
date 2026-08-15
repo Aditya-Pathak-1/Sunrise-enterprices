@@ -1,91 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/sunrise_design.dart';
-import '../services/api_service.dart';
-import 'home_screen.dart';
-import 'signup_screen.dart';
-import 'admin_login_screen.dart';
+import 'admin_dashboard_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _nameController = TextEditingController();
-  final _contactController = TextEditingController();
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  
   bool _loading = false;
+  bool _obscurePassword = true;
   String? _error;
 
-  @override
-  void initState() {
-    super.initState();
-    _checkExistingSession();
-  }
+  static const Map<String, String> _admins = {
+    'RASHMI NAIK': 'sunrise@123',
+    'SHILPA BHOIR': 'sunrise@123',
+    'AYUSH': 'sunrise@123',
+    'AHANA': 'sunrise@123',
+    'ADITYA': 'sunrise@123',
+  };
 
-  Future<void> _checkExistingSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    final name = prefs.getString('user_name');
-    final contact = prefs.getString('contact_number');
-    if (name != null && contact != null && mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => HomeScreen(name: name, employeeId: contact),
-        ),
-      );
-    }
-  }
-
-  Future<void> _login() async {
+  void _login() {
     if (!_formKey.currentState!.validate()) return;
+    
     setState(() {
       _loading = true;
       _error = null;
     });
 
-    final name = _nameController.text.trim();
-    final contact = _contactController.text.trim();
+    final username = _usernameController.text.trim().toUpperCase();
+    final password = _passwordController.text;
 
-    try {
-      await ApiService.authLogin(name, contact);
+    // Simulate network delay
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (!mounted) return;
       
-      // Save session
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_name', name);
-      await prefs.setString('contact_number', contact);
-      
-      // We use contact number as the employeeId for attendance tracking
-      await prefs.setString('employee_id', contact); 
+      setState(() => _loading = false);
 
-      if (mounted) {
+      if (_admins.containsKey(username) && _admins[username] == password) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => HomeScreen(
-              name: name,
-              employeeId: contact,
-            ),
+            builder: (_) => AdminDashboardScreen(adminName: username),
           ),
         );
+      } else {
+        setState(() => _error = 'Invalid Admin credentials.');
       }
-    } on ApiException catch (e) {
-      setState(() => _error = e.message);
-    } catch (e) {
-      setState(() => _error = 'An unexpected error occurred.');
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
+    });
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _contactController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -93,26 +68,27 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black87),
+      ),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
-                      
-                      // Logo
-                      const SunriseLogo(size: 65),
-                      
-                      const SizedBox(height: 40),
+                      const SunriseLogo(size: 55),
+                      const SizedBox(height: 30),
 
                       Text(
-                        'Welcome Back',
+                        'Admin Portal',
                         style: GoogleFonts.outfit(
                           fontSize: 28,
                           fontWeight: FontWeight.w700,
@@ -121,11 +97,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Please verify your details to proceed.',
+                        'Authorized access only.',
                         style: GoogleFonts.outfit(
                           fontSize: 14,
                           color: Colors.grey[600],
                         ),
+                        textAlign: TextAlign.center,
                       ),
 
                       const SizedBox(height: 30),
@@ -145,15 +122,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                      // Name Field
+                      // Username Field
                       TextFormField(
-                        controller: _nameController,
-                        textCapitalization: TextCapitalization.words,
+                        controller: _usernameController,
+                        textCapitalization: TextCapitalization.characters,
                         style: GoogleFonts.outfit(color: Colors.black87),
                         decoration: InputDecoration(
-                          labelText: 'Employee Name',
+                          labelText: 'Admin Username',
                           labelStyle: TextStyle(color: Colors.grey[500]),
-                          prefixIcon: const Icon(Icons.person_outline, color: Color(0xFFFF9800)),
+                          prefixIcon: const Icon(Icons.admin_panel_settings_outlined, color: Color(0xFFFF9800)),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),
@@ -163,20 +140,31 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderSide: const BorderSide(color: Color(0xFFFF9800), width: 2),
                           ),
                         ),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Username is required' : null,
                       ),
 
                       const SizedBox(height: 20),
-
-                      // Contact Number Field
+                      
+                      // Password Field
                       TextFormField(
-                        controller: _contactController,
-                        keyboardType: TextInputType.phone,
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
                         style: GoogleFonts.outfit(color: Colors.black87),
                         decoration: InputDecoration(
-                          labelText: 'Contact Number',
+                          labelText: 'Password',
                           labelStyle: TextStyle(color: Colors.grey[500]),
-                          prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFFFF9800)),
+                          prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFFFF9800)),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              color: Colors.grey[400],
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(color: Colors.grey[300]!),
@@ -186,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderSide: const BorderSide(color: Color(0xFFFF9800), width: 2),
                           ),
                         ),
-                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Contact Number is required' : null,
+                        validator: (v) => (v == null || v.trim().isEmpty) ? 'Password is required' : null,
                       ),
 
                       const SizedBox(height: 30),
@@ -198,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           onPressed: _loading ? null : _login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF9800),
+                            backgroundColor: const Color(0xFF1E1E1E), // Darker button for admin
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -212,58 +200,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                                 )
                               : Text(
-                                  'Verify & Login',
+                                  'Login as Admin',
                                   style: GoogleFonts.outfit(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                     letterSpacing: 0.5,
                                   ),
                                 ),
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 24),
-                      
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "New Employee? ",
-                            style: GoogleFonts.outfit(color: Colors.grey[600]),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (_) => const SignupScreen()),
-                              );
-                            },
-                            child: Text(
-                              "Sign Up",
-                              style: GoogleFonts.outfit(
-                                color: const Color(0xFFFF9800),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      
-                      const SizedBox(height: 30),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const AdminLoginScreen()),
-                          );
-                        },
-                        child: Text(
-                          "Admin Portal",
-                          style: GoogleFonts.outfit(
-                            color: Colors.grey[400],
-                            fontSize: 12,
-                            decoration: TextDecoration.underline,
-                          ),
                         ),
                       ),
                     ],
@@ -273,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             
             // Wavy Footer
-            const SunriseFooter(text: 'Sunrise Equipments v2.0'),
+            const SunriseFooter(text: 'Sunrise Admin Portal'),
           ],
         ),
       ),
