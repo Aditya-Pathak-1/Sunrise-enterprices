@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/sunrise_design.dart';
 import '../services/api_service.dart';
 import 'home_screen.dart';
+import 'employee_register_face_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -43,10 +44,12 @@ class _SignupScreenState extends State<SignupScreen> {
       await prefs.setString('employee_id', contact);
 
       if (mounted) {
+        // Since they just signed up, they don't have a face registered yet.
+        // Take them straight to the Face Registration screen.
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (_) => HomeScreen(
+            builder: (_) => EmployeeRegisterFaceScreen(
               name: name,
               employeeId: contact,
             ),

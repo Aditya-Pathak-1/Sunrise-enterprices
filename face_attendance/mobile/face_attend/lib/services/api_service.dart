@@ -142,6 +142,24 @@ class ApiService {
   }
 
   // ─────────────────────────────────────────────────────────────────
+  // Check if Face is Registered
+  // ─────────────────────────────────────────────────────────────────
+
+  static Future<bool> checkIfFaceRegistered(String employeeId) async {
+    try {
+      final res = await http.get(Uri.parse(AppConfig.peopleUrl)).timeout(_timeout);
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body) as Map<String, dynamic>;
+        final registeredPeople = List<String>.from(data['registered_people'] ?? []);
+        return registeredPeople.contains(employeeId);
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
   // Attendance: Today
   // ─────────────────────────────────────────────────────────────────
 

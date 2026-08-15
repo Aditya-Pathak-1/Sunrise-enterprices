@@ -6,6 +6,7 @@ import '../services/api_service.dart';
 import 'home_screen.dart';
 import 'signup_screen.dart';
 import 'admin_login_screen.dart';
+import 'employee_register_face_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -62,16 +63,33 @@ class _LoginScreenState extends State<LoginScreen> {
       // We use contact number as the employeeId for attendance tracking
       await prefs.setString('employee_id', contact); 
 
+      // Check if they have a registered face
+      final isRegistered = await ApiService.checkIfFaceRegistered(contact);
+
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => HomeScreen(
-              name: name,
-              employeeId: contact,
+        if (isRegistered) {
+          // Proceed to Home Screen normally
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => HomeScreen(
+                name: name,
+                employeeId: contact,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          // Redirect to Face Setup
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => EmployeeRegisterFaceScreen(
+                name: name,
+                employeeId: contact,
+              ),
+            ),
+          );
+        }
       }
     } on ApiException catch (e) {
       setState(() => _error = e.message);
