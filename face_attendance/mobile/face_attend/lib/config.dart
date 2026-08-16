@@ -11,7 +11,7 @@
 
 class AppConfig {
   // ─── API ──────────────────────────────────────────────────────────
-  static const String baseUrl = 'http://10.47.83.242:8000';
+  static const String baseUrl = 'https://sunrise-enterprices.onrender.com';
 
   // ─── Face Recognition ─────────────────────────────────────────────
   /// Minimum confidence to display (informational only — threshold enforced server-side)
